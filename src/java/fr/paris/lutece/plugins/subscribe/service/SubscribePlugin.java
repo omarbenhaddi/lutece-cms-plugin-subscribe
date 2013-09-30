@@ -22,7 +22,10 @@ public class SubscribePlugin extends PluginDefaultImplementation
     {
         if ( _plugin == null )
         {
-            _plugin = PluginService.getPlugin( PLUGIN_NAME );
+            synchronized ( SubscribePlugin.class )
+            {
+                _plugin = PluginService.getPlugin( PLUGIN_NAME );
+            }
         }
         return _plugin;
     }

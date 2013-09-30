@@ -67,7 +67,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     private static final String CONSTANT_WHERE = " WHERE ";
     private static final String CONSTANT_AND = " AND ";
 
-    private static int _nSubscriberId = 0;
+    private static int _nSubscriberId;
 
     /**
      * {@inheritDoc}

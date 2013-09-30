@@ -18,13 +18,16 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 /**
  * Service to manage subscriptions
  */
-public class SubscriptionService
+public final class SubscriptionService
 {
     private static final String PARAMETER_ID_SUBSCRIBER = "subscribe.idSubscriber";
 
+    private static SubscriptionService _instance = new SubscriptionService( );
     private ISubscriptionDAO _dao = SpringContextService.getBean( "subscribe.subscriptionDAO" );
-    private static volatile SubscriptionService _instance = new SubscriptionService( );
 
+    /**
+     * Private constructor
+     */
     private SubscriptionService( )
     {
         // Do nothing

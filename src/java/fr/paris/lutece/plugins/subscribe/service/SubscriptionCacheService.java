@@ -6,12 +6,15 @@ import fr.paris.lutece.portal.service.cache.AbstractCacheableService;
 /**
  * Cache for subscription service
  */
-public class SubscriptionCacheService extends AbstractCacheableService
+public final class SubscriptionCacheService extends AbstractCacheableService
 {
     private static final String CACHE_SERVICE_NAME = "SubscriptionCacheService";
 
     private static volatile SubscriptionCacheService _instance = new SubscriptionCacheService( );
 
+    /**
+     * Private constructor
+     */
     private SubscriptionCacheService( )
     {
         this.initCache( );
