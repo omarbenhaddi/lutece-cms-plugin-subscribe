@@ -170,9 +170,10 @@ public class SubscriptionService
         Set<LuteceUser> usersFound = new HashSet<LuteceUser>( );
         for ( Subscription subscription : listSubscription )
         {
-            List<LuteceUser> listSubscribers = UserPreferencesService.instance( ).getUsers( PARAMETER_ID_SUBSCRIBER,
+            List<String> listSubscribers = UserPreferencesService.instance( ).getUsers( PARAMETER_ID_SUBSCRIBER,
                     Integer.toString( subscription.getIdSubscriber( ) ) );
-            usersFound.addAll( listSubscribers );
+            //            usersFound.addAll( listSubscribers );
+            // TODO : get LuteceUser from user names
         }
         return usersFound;
     }
