@@ -82,7 +82,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
 
             if ( daoUtil.next( ) )
             {
-                _nSubscriberId = daoUtil.getInt( 1 );
+                _nSubscriberId = daoUtil.getInt( 1 ) + 1;
             }
             daoUtil.free( );
         }
