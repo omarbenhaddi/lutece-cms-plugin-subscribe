@@ -40,8 +40,34 @@ public class SubscriptionFilter
 {
     private int _nIdSubscriber;
     private String _strSubscriptionProvider;
-    private String _strActionKey;
+    private String _strSubscriptionKey;
     private String _strIdSubscribedResource;
+
+    /**
+     * Create a new SubscriptionFilter
+     */
+    public SubscriptionFilter( )
+    {
+        // Do nothing
+    }
+
+    /**
+     * Create a new SubscriptionFilter with every field initialized
+     * @param nIdSubscriber The subscriber id of subscriptions to get
+     * @param strSubscriptionProvider The subscription provider of subscriptions
+     *            to get
+     * @param strSubscriptionKey The subscription key of subscriptions to get
+     * @param strIdSubscribedResource The id of the subscribed resource of
+     *            subscriptions to get
+     */
+    public SubscriptionFilter( int nIdSubscriber, String strSubscriptionProvider, String strSubscriptionKey,
+            String strIdSubscribedResource )
+    {
+        this._nIdSubscriber = nIdSubscriber;
+        this._strSubscriptionProvider = strSubscriptionProvider;
+        this._strSubscriptionKey = strSubscriptionKey;
+        this._strIdSubscribedResource = strIdSubscribedResource;
+    }
 
     /**
      * Get the id of the subscriber
@@ -85,7 +111,7 @@ public class SubscriptionFilter
      */
     public String getSubscriptionKey( )
     {
-        return _strActionKey;
+        return _strSubscriptionKey;
     }
 
     /**
@@ -94,7 +120,7 @@ public class SubscriptionFilter
      */
     public void setSubscriptionKey( String strActionKey )
     {
-        _strActionKey = strActionKey;
+        _strSubscriptionKey = strActionKey;
     }
 
     /**

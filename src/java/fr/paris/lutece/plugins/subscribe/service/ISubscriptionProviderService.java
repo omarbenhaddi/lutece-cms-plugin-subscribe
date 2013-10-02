@@ -1,5 +1,7 @@
 package fr.paris.lutece.plugins.subscribe.service;
 
+import java.util.Locale;
+
 import fr.paris.lutece.plugins.subscribe.business.Subscription;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 
@@ -21,9 +23,11 @@ public interface ISubscriptionProviderService
      * @param user The user
      * @param strSubscriptionKey The key of the subscription
      * @param strIdSubscribedResource The id of the subscribed resource
+     * @param locale The locale to display the generated HTML in
      * @return An HTML string that describes the subscription
      */
-    String getSubscriptionHtmlDescription( LuteceUser user, String strSubscriptionKey, String strIdSubscribedResource );
+    String getSubscriptionHtmlDescription( LuteceUser user, String strSubscriptionKey, String strIdSubscribedResource,
+            Locale locale );
 
     /**
      * Check if a subscription can be automatically removed. If the subscription

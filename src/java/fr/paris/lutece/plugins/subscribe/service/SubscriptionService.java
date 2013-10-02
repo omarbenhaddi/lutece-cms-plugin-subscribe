@@ -1,18 +1,19 @@
 package fr.paris.lutece.plugins.subscribe.service;
 
+import fr.paris.lutece.plugins.subscribe.business.ISubscriptionDAO;
+import fr.paris.lutece.plugins.subscribe.business.Subscription;
+import fr.paris.lutece.plugins.subscribe.business.SubscriptionFilter;
+import fr.paris.lutece.portal.service.prefs.UserPreferencesService;
+import fr.paris.lutece.portal.service.security.LuteceUser;
+import fr.paris.lutece.portal.service.security.LuteceUserService;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-
-import fr.paris.lutece.plugins.subscribe.business.ISubscriptionDAO;
-import fr.paris.lutece.plugins.subscribe.business.Subscription;
-import fr.paris.lutece.plugins.subscribe.business.SubscriptionFilter;
-import fr.paris.lutece.portal.service.prefs.UserPreferencesService;
-import fr.paris.lutece.portal.service.security.LuteceUser;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 
 /**
@@ -152,6 +153,32 @@ public final class SubscriptionService
     }
 
     /**
+     * Get a lutece user associated to a subscription
+     * @param subscription The subscription
+     * @return The lutece user, or null if no lutece user was found
+     */
+    public LuteceUser getLuteceUserFromSubscription( Subscription subscription )
+    {
+        return getLuteceUserFromSubscriberId( subscription.getIdSubscriber( ) );
+    }
+
+    /**
+     * Get a lutece user from a subscriber id
+     * @param nSubscriberId The subscriber id
+     * @return The lutece user, or null if no lutece user was found
+     */
+    public LuteceUser getLuteceUserFromSubscriberId( int nSubscriberId )
+    {
+        List<String> listSubscribers = UserPreferencesService.instance( ).getUsers( PARAMETER_ID_SUBSCRIBER,
+                Integer.toString( nSubscriberId ) );
+        if ( listSubscribers != null && listSubscribers.size( ) > 0 )
+        {
+            return LuteceUserService.getLuteceUserFromName( listSubscribers.get( 0 ) );
+        }
+        return null;
+    }
+
+    /**
      * Get the collection of users that subscribed to a given resource with the
      * given key
      * @param strSubscriptionProvider The subscription provider of subscribers
@@ -175,8 +202,14 @@ public final class SubscriptionService
         {
             List<String> listSubscribers = UserPreferencesService.instance( ).getUsers( PARAMETER_ID_SUBSCRIBER,
                     Integer.toString( subscription.getIdSubscriber( ) ) );
-            //            usersFound.addAll( listSubscribers );
-            // TODO : get LuteceUser from user names
+            for ( String strUserName : listSubscribers )
+            {
+                LuteceUser user = LuteceUserService.getLuteceUserFromName( strUserName );
+                if ( user != null )
+                {
+                    usersFound.add( user );
+                }
+            }
         }
         return usersFound;
     }

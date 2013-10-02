@@ -34,12 +34,12 @@
 
 package fr.paris.lutece.plugins.subscribe.business;
 
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.util.sql.DAOUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.util.sql.DAOUtil;
 
 
 /**
@@ -55,7 +55,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     private static final String SQL_QUERY_SELECT = " SELECT id_subscription, id_subscriber, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription ";
     private static final String SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID = SQL_QUERY_SELECT
             + " WHERE id_subscription = ? ";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO subscribe_subscription ( id_subscription, id_subscriber, subscription_provider, subscription_key, id_subscribed_resource ) VALUES ( ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO subscribe_subscription ( id_subscription, id_subscriber, subscription_provider, subscription_key, id_subscribed_resource ) VALUES ( ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM subscribe_subscription WHERE id_subscription = ? ";
     private static final String SQL_QUERY_UPDATE = "UPDATE subscribe_subscription SET id_subscriber = ?, subscription_provider = ?, subscription_key = ?, id_subscribed_resource = ? WHERE id_subscription = ?";
     private static final String SQL_QUERY_SELECTALL = "SELECT id_subscription, id_subscriber, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription";
@@ -103,7 +103,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
         int nKey = 1;
         if ( daoUtil.next( ) )
         {
-            nKey = daoUtil.getInt( 1 );
+            nKey = daoUtil.getInt( 1 ) + 1;
         }
 
         daoUtil.free( );
