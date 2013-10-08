@@ -12,7 +12,7 @@ public class SubscribePlugin extends PluginDefaultImplementation
 {
     private static final String PLUGIN_NAME = "subscribe";
 
-    private static Plugin _plugin;
+    private static volatile Plugin _plugin;
 
     /**
      * Get the subscribe plugin
