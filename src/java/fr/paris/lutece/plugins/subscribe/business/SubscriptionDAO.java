@@ -53,7 +53,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
 
     // Constants
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_subscription ) FROM subscribe_subscription";
-    private static final String SQL_QUERY_NEW_SUBSCRIBER_ID = " SELECT max( id_user ) FROM subscribe_subscription ";
     private static final String SQL_QUERY_SELECT = " SELECT id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription ";
     private static final String SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID = SQL_QUERY_SELECT
             + " WHERE id_subscription = ? ";
