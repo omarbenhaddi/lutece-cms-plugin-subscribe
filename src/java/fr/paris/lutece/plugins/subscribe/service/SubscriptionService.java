@@ -3,7 +3,6 @@ package fr.paris.lutece.plugins.subscribe.service;
 import fr.paris.lutece.plugins.subscribe.business.ISubscriptionDAO;
 import fr.paris.lutece.plugins.subscribe.business.Subscription;
 import fr.paris.lutece.plugins.subscribe.business.SubscriptionFilter;
-import fr.paris.lutece.portal.service.prefs.UserPreferencesService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.LuteceUserService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
@@ -21,8 +20,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class SubscriptionService
 {
-    private static final String PARAMETER_ID_SUBSCRIBER = "subscribe.idSubscriber";
-
     private static SubscriptionService _instance = new SubscriptionService( );
     private ISubscriptionDAO _dao = SpringContextService.getBean( "subscribe.subscriptionDAO" );
 
@@ -50,7 +47,7 @@ public final class SubscriptionService
      */
     public void createSubscription( Subscription subscription, LuteceUser user )
     {
-        subscription.setIdSubscriber( getIdSubscriberFromLuteceUser( user ) );
+        subscription.setUserId( user.getName( ) );
         createSubscription( subscription );
     }
 
@@ -126,56 +123,13 @@ public final class SubscriptionService
     }
 
     /**
-     * Get the subscriber id of a lutece user. If the user is not associated
-     * with a subscriber id, then we associates him with a new one
-     * @param user The user to get the subscriber id of
-     * @return The subscriber id
-     */
-    public int getIdSubscriberFromLuteceUser( LuteceUser user )
-    {
-        String strUserName = user.getName( );
-        Integer nIdSubscriber = (Integer) SubscriptionCacheService.getInstance( ).getFromCache( strUserName );
-        if ( nIdSubscriber != null && nIdSubscriber > 0 )
-        {
-            return nIdSubscriber;
-        }
-        nIdSubscriber = UserPreferencesService.instance( ).getInt( strUserName, PARAMETER_ID_SUBSCRIBER, 0 );
-        if ( nIdSubscriber <= 0 )
-        {
-            synchronized ( SubscriptionService.class )
-            {
-                nIdSubscriber = _dao.getNewSubscriberId( SubscribePlugin.getPlugin( ) );
-            }
-            UserPreferencesService.instance( ).putInt( strUserName, PARAMETER_ID_SUBSCRIBER, nIdSubscriber );
-        }
-        SubscriptionCacheService.getInstance( ).putInCache( strUserName, nIdSubscriber );
-        return nIdSubscriber;
-    }
-
-    /**
      * Get a lutece user associated to a subscription
      * @param subscription The subscription
      * @return The lutece user, or null if no lutece user was found
      */
     public LuteceUser getLuteceUserFromSubscription( Subscription subscription )
     {
-        return getLuteceUserFromSubscriberId( subscription.getIdSubscriber( ) );
-    }
-
-    /**
-     * Get a lutece user from a subscriber id
-     * @param nSubscriberId The subscriber id
-     * @return The lutece user, or null if no lutece user was found
-     */
-    public LuteceUser getLuteceUserFromSubscriberId( int nSubscriberId )
-    {
-        List<String> listSubscribers = UserPreferencesService.instance( ).getUsers( PARAMETER_ID_SUBSCRIBER,
-                Integer.toString( nSubscriberId ) );
-        if ( listSubscribers != null && listSubscribers.size( ) > 0 )
-        {
-            return LuteceUserService.getLuteceUserFromName( listSubscribers.get( 0 ) );
-        }
-        return null;
+        return LuteceUserService.getLuteceUserFromName( subscription.getUserId( ) );
     }
 
     /**
@@ -200,15 +154,10 @@ public final class SubscriptionService
         Set<LuteceUser> usersFound = new HashSet<LuteceUser>( );
         for ( Subscription subscription : listSubscription )
         {
-            List<String> listSubscribers = UserPreferencesService.instance( ).getUsers( PARAMETER_ID_SUBSCRIBER,
-                    Integer.toString( subscription.getIdSubscriber( ) ) );
-            for ( String strUserName : listSubscribers )
+            LuteceUser user = LuteceUserService.getLuteceUserFromName( subscription.getUserId( ) );
+            if ( user != null )
             {
-                LuteceUser user = LuteceUserService.getLuteceUserFromName( strUserName );
-                if ( user != null )
-                {
-                    usersFound.add( user );
-                }
+                usersFound.add( user );
             }
         }
         return usersFound;

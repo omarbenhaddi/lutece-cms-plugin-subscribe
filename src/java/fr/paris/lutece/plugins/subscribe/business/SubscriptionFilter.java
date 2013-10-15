@@ -38,7 +38,7 @@ package fr.paris.lutece.plugins.subscribe.business;
  */
 public class SubscriptionFilter
 {
-    private int _nIdSubscriber;
+    private String _strUserId;
     private String _strSubscriptionProvider;
     private String _strSubscriptionKey;
     private String _strIdSubscribedResource;
@@ -53,17 +53,17 @@ public class SubscriptionFilter
 
     /**
      * Create a new SubscriptionFilter with every field initialized
-     * @param nIdSubscriber The subscriber id of subscriptions to get
+     * @param strUserId The lutece user name
      * @param strSubscriptionProvider The subscription provider of subscriptions
      *            to get
      * @param strSubscriptionKey The subscription key of subscriptions to get
      * @param strIdSubscribedResource The id of the subscribed resource of
      *            subscriptions to get
      */
-    public SubscriptionFilter( int nIdSubscriber, String strSubscriptionProvider, String strSubscriptionKey,
+    public SubscriptionFilter( String strUserId, String strSubscriptionProvider, String strSubscriptionKey,
             String strIdSubscribedResource )
     {
-        this._nIdSubscriber = nIdSubscriber;
+        this._strUserId = strUserId;
         this._strSubscriptionProvider = strSubscriptionProvider;
         this._strSubscriptionKey = strSubscriptionKey;
         this._strIdSubscribedResource = strIdSubscribedResource;
@@ -73,18 +73,18 @@ public class SubscriptionFilter
      * Get the id of the subscriber
      * @return The id of the subscriber
      */
-    public int getIdSubscriber( )
+    public String getUserId( )
     {
-        return _nIdSubscriber;
+        return _strUserId;
     }
 
     /**
-     * Get the id of the subscriber
-     * @param strIdSubscriber The id of the subscriber
+     * Set the lutece user name associated with this filter
+     * @param strUserId The lutece user name
      */
-    public void setIdSubscriber( int strIdSubscriber )
+    public void setIdSubscriber( String strUserId )
     {
-        this._nIdSubscriber = strIdSubscriber;
+        this._strUserId = strUserId;
     }
 
     /**

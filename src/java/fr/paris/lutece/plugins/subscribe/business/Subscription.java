@@ -58,7 +58,7 @@ public class Subscription
     @NotEmpty( message = "#i18n{portal.validation.message.notEmpty}" )
     private int _nIdSubscription;
     @NotEmpty( message = "#i18n{portal.validation.message.notEmpty}" )
-    private int _nIdSubscriber;
+    private String _strUserId;
     @NotEmpty( message = "#i18n{portal.validation.message.notEmpty}" )
     @Size( max = 255, message = "#i18n{portal.validation.message.sizeMax}" )
     private String _strSubscriptionProvider;
@@ -93,9 +93,9 @@ public class Subscription
      * SubscriptionService#getIdSubscriberFromLuteceUser( LuteceUser )}
      * @return The id of the subscriber
      */
-    public int getIdSubscriber( )
+    public String getUserId( )
     {
-        return _nIdSubscriber;
+        return _strUserId;
     }
 
     /**
@@ -103,11 +103,11 @@ public class Subscription
      * the method
      * {@link fr.paris.lutece.plugins.subscribe.service.SubscriptionService#getIdSubscriberFromLuteceUser(fr.paris.lutece.portal.service.security.LuteceUser)
      * SubscriptionService#getIdSubscriberFromLuteceUser( LuteceUser )}
-     * @param strIdSubscriber The id of the subscriber
+     * @param strUserId The id of the subscriber
      */
-    public void setIdSubscriber( int strIdSubscriber )
+    public void setUserId( String strUserId )
     {
-        this._nIdSubscriber = strIdSubscriber;
+        this._strUserId = strUserId;
     }
 
     /**

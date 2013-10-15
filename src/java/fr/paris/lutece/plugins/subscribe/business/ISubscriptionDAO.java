@@ -34,10 +34,10 @@
 
 package fr.paris.lutece.plugins.subscribe.business;
 
+import fr.paris.lutece.portal.service.plugin.Plugin;
+
 import java.util.Collection;
 import java.util.List;
-
-import fr.paris.lutece.portal.service.plugin.Plugin;
 
 
 /**
@@ -46,13 +46,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 public interface ISubscriptionDAO
 {
-    /**
-     * Get a new subscriber id. A subscriber id should be unique for every user
-     * @param plugin The plugin
-     * @return The new value of the subscriber id
-     */
-    int getNewSubscriberId( Plugin plugin );
-
     /**
      * Insert a new record in the table.
      * @param subscription instance of the Subscription object to insert

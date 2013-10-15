@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * This class provides Data Access methods for Subscription objects
@@ -51,16 +53,16 @@ public final class SubscriptionDAO implements ISubscriptionDAO
 
     // Constants
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_subscription ) FROM subscribe_subscription";
-    private static final String SQL_QUERY_NEW_SUBSCRIBER_ID = " SELECT max( id_subscriber ) FROM subscribe_subscription ";
-    private static final String SQL_QUERY_SELECT = " SELECT id_subscription, id_subscriber, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription ";
+    private static final String SQL_QUERY_NEW_SUBSCRIBER_ID = " SELECT max( id_user ) FROM subscribe_subscription ";
+    private static final String SQL_QUERY_SELECT = " SELECT id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription ";
     private static final String SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID = SQL_QUERY_SELECT
             + " WHERE id_subscription = ? ";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO subscribe_subscription ( id_subscription, id_subscriber, subscription_provider, subscription_key, id_subscribed_resource ) VALUES ( ?, ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO subscribe_subscription ( id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource ) VALUES ( ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM subscribe_subscription WHERE id_subscription = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE subscribe_subscription SET id_subscriber = ?, subscription_provider = ?, subscription_key = ?, id_subscribed_resource = ? WHERE id_subscription = ?";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_subscription, id_subscriber, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription";
+    private static final String SQL_QUERY_UPDATE = "UPDATE subscribe_subscription SET id_user = ?, subscription_provider = ?, subscription_key = ?, id_subscribed_resource = ? WHERE id_subscription = ?";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription";
 
-    private static final String SQL_FILTER_ID_SUBSCRIBER = " id_subscriber = ? ";
+    private static final String SQL_FILTER_ID_USER = " id_user = ? ";
     private static final String SQL_FILTER_PROVIDER = " subscription_provider = ? ";
     private static final String SQL_FILTER_SUBSCRIPTION_KEY = " subscription_key = ? ";
     private static final String SQL_FILTER_ID_SUBSCRIBED_RESOURCE = " id_subscribed_resource = ? ";
@@ -68,27 +70,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     private static final String CONSTANT_AND = " AND ";
 
     private static int _nSubscriberId;
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNewSubscriberId( Plugin plugin )
-    {
-        if ( _nSubscriberId == 0 )
-        {
-            DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_SUBSCRIBER_ID, plugin );
-            daoUtil.executeQuery( );
-
-            if ( daoUtil.next( ) )
-            {
-                _nSubscriberId = daoUtil.getInt( 1 ) + 1;
-            }
-            daoUtil.free( );
-        }
-
-        return _nSubscriberId++;
-    }
 
     /**
      * Get a new primary key
@@ -121,7 +102,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
         subscription.setIdSubscription( newPrimaryKey( plugin ) );
 
         daoUtil.setInt( 1, subscription.getIdSubscription( ) );
-        daoUtil.setInt( 2, subscription.getIdSubscriber( ) );
+        daoUtil.setString( 2, subscription.getUserId( ) );
         daoUtil.setString( 3, subscription.getSubscriptionProvider( ) );
         daoUtil.setString( 4, subscription.getSubscriptionKey( ) );
         daoUtil.setString( 5, subscription.getIdSubscribedResource( ) );
@@ -146,7 +127,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
         {
             subscription = new Subscription( );
             subscription.setIdSubscription( daoUtil.getInt( 1 ) );
-            subscription.setIdSubscriber( daoUtil.getInt( 2 ) );
+            subscription.setUserId( daoUtil.getString( 2 ) );
             subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
             subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
             subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
@@ -176,7 +157,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
 
-        daoUtil.setInt( 1, subscription.getIdSubscriber( ) );
+        daoUtil.setString( 1, subscription.getUserId( ) );
         daoUtil.setString( 2, subscription.getSubscriptionProvider( ) );
         daoUtil.setString( 3, subscription.getSubscriptionKey( ) );
         daoUtil.setString( 4, subscription.getIdSubscribedResource( ) );
@@ -201,7 +182,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
             Subscription subscription = new Subscription( );
 
             subscription.setIdSubscription( daoUtil.getInt( 1 ) );
-            subscription.setIdSubscriber( daoUtil.getInt( 2 ) );
+            subscription.setUserId( daoUtil.getString( 2 ) );
             subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
             subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
             subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
@@ -222,10 +203,10 @@ public final class SubscriptionDAO implements ISubscriptionDAO
         List<Subscription> listSubscription = new ArrayList<Subscription>( );
         boolean bHasFilter = false;
         StringBuilder sbSql = new StringBuilder( SQL_QUERY_SELECT );
-        if ( filter.getIdSubscriber( ) > 0 )
+        if ( StringUtils.isNotEmpty( filter.getUserId( ) ) )
         {
             sbSql.append( CONSTANT_WHERE );
-            sbSql.append( SQL_FILTER_ID_SUBSCRIBER );
+            sbSql.append( SQL_FILTER_ID_USER );
             bHasFilter = true;
         }
         if ( filter.getSubscriptionProvider( ) != null )
@@ -270,9 +251,9 @@ public final class SubscriptionDAO implements ISubscriptionDAO
 
         int nIndex = 1;
         DAOUtil daoUtil = new DAOUtil( sbSql.toString( ) );
-        if ( filter.getIdSubscriber( ) > 0 )
+        if ( StringUtils.isNotEmpty( filter.getUserId( ) ) )
         {
-            daoUtil.setInt( nIndex++, filter.getIdSubscriber( ) );
+            daoUtil.setString( nIndex++, filter.getUserId( ) );
         }
         if ( filter.getSubscriptionProvider( ) != null )
         {
@@ -293,7 +274,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
         {
             Subscription subscription = new Subscription( );
             subscription.setIdSubscription( daoUtil.getInt( 1 ) );
-            subscription.setIdSubscriber( daoUtil.getInt( 2 ) );
+            subscription.setUserId( daoUtil.getString( 2 ) );
             subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
             subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
             subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
