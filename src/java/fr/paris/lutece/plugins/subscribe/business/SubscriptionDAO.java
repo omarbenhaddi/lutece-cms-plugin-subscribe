@@ -68,8 +68,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     private static final String CONSTANT_WHERE = " WHERE ";
     private static final String CONSTANT_AND = " AND ";
 
-    private static int _nSubscriberId;
-
     /**
      * Get a new primary key
      * @param plugin The plugin
