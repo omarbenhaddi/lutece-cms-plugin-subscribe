@@ -44,6 +44,7 @@ import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
@@ -53,8 +54,9 @@ import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
 
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,11 +164,22 @@ public class SubscribeApp extends MVCApplication
     public XPage confirmRemoveSubscription( HttpServletRequest request ) throws SiteMessageException
     {
         String strReferer = request.getHeader( PARAMETER_REFERER );
-        UrlItem url = new UrlItem( PATH_PORTAL + getActionUrl( ACTION_DO_REMOVE_URL ) );
-        url.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
-        url.addParameter( PARAMETER_FROM_URL, HtmlUtils.htmlEscape( strReferer ) );
+        UrlItem urlItem = new UrlItem( PATH_PORTAL + getActionUrl( ACTION_DO_REMOVE_URL ) );
+        urlItem.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
+
+        if ( StringUtils.isNotEmpty( strReferer ) )
+        {
+            try
+            {
+                urlItem.addParameter( PARAMETER_FROM_URL, URIUtil.encodeQuery( strReferer ) );
+            }
+            catch ( URIException e )
+            {
+                AppLogService.error( e.getMessage( ), e );
+            }
+        }
         SiteMessageService.setMessage( request, MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION, SiteMessage.TYPE_CONFIRMATION,
-                url.getUrl( ) );
+                urlItem.getUrl( ) );
 
         return null;
     }
@@ -203,7 +216,7 @@ public class SubscribeApp extends MVCApplication
         String strUrl;
         if ( StringUtils.isNotEmpty( strReferer ) )
         {
-            strUrl = HtmlUtils.htmlUnescape( strReferer );
+            strUrl = strReferer;
         }
         else
         {
