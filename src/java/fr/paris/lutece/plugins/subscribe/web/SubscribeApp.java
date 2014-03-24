@@ -54,6 +54,7 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +72,7 @@ public class SubscribeApp extends MVCApplication
 {
     private static final long serialVersionUID = 4082230643317543885L;
 
-    private static final String JSP_URL_MYDASHBOARD_XPAGE = "jsp/site/Portal.jsp?page=mydashboard";
+    private static final String JSP_URL_SUBSCRIBE_XPAGE = "jsp/site/Portal.jsp?page=subscribe";
 
     private static final String MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION = "module.subscribe.mydashboard.message.confirmRemoveSubscription";
     private static final String MESSAGE_ACCESS_DENIED = "module.subscribe.mydashboard.message.accessDenied";
@@ -163,7 +164,7 @@ public class SubscribeApp extends MVCApplication
         String strReferer = request.getHeader( PARAMETER_REFERER );
         UrlItem url = new UrlItem( PATH_PORTAL + getActionUrl( ACTION_DO_REMOVE_URL ) );
         url.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
-        url.addParameter( PARAMETER_FROM_URL, strReferer );
+        url.addParameter( PARAMETER_FROM_URL, HtmlUtils.htmlEscape( strReferer ) );
         SiteMessageService.setMessage( request, MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION, SiteMessage.TYPE_CONFIRMATION,
                 url.getUrl( ) );
 
@@ -202,11 +203,11 @@ public class SubscribeApp extends MVCApplication
         String strUrl;
         if ( StringUtils.isNotEmpty( strReferer ) )
         {
-            strUrl = strReferer;
+            strUrl = HtmlUtils.htmlUnescape( strReferer );
         }
         else
         {
-            strUrl = AppPathService.getBaseUrl( request ) + JSP_URL_MYDASHBOARD_XPAGE;
+            strUrl = AppPathService.getBaseUrl( request ) + JSP_URL_SUBSCRIBE_XPAGE;
         }
 
         redirect( request, strUrl );
