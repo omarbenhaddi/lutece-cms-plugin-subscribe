@@ -171,7 +171,7 @@ public class SubscribeApp extends MVCApplication
         {
             try
             {
-                urlItem.addParameter( PARAMETER_FROM_URL, URIUtil.encodeQuery( strReferer ) );
+                urlItem.addParameter( PARAMETER_FROM_URL, URIUtil.encodeWithinQuery( strReferer ) );
             }
             catch ( URIException e )
             {
