@@ -119,7 +119,7 @@ public class SubscribeApp extends MVCApplication
             {
                 SubscriptionService subscriptionService = SubscriptionService.getInstance( );
                 SubscriptionFilter filter = new SubscriptionFilter( );
-                filter.setIdSubscriber( user.getName( ) );
+                filter.setIdSubscriber( user.getUserInfo( LuteceUser.BUSINESS_INFO_ONLINE_EMAIL ) );
                 List<Subscription> listSubscription = subscriptionService.findByFilter( filter );
                 List<SubscriptionDTO> listSubscriptionDto = new ArrayList<SubscriptionDTO>( listSubscription.size( ) );
                 for ( Subscription subscription : listSubscription )
