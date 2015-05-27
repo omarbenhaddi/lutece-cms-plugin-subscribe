@@ -191,7 +191,7 @@ public class SubscribeApp extends MVCApplication
             LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
             Subscription subscription = SubscriptionService.getInstance( ).findBySubscriptionId( nIdSubscription );
             if ( user != null && subscription != null
-                    && StringUtils.equals( subscription.getUserId( ), user.getName( ) ) )
+                    && StringUtils.equals( subscription.getUserId( ), user.getUserInfo( LuteceUser.BUSINESS_INFO_ONLINE_EMAIL ) ) )
             {
                 SubscriptionService.getInstance( ).removeSubscription( nIdSubscription, true );
             }
