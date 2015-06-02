@@ -61,6 +61,9 @@ public interface ISubscriptionProviderService
      */
     String getSubscriptionHtmlDescription( LuteceUser user, String strSubscriptionKey, String strIdSubscribedResource,
             Locale locale );
+    
+    String getSubscriptionHtmlDescriptionBis( LuteceUser user, String strSubscriptionKey, String strIdSubscribedResource,
+            Locale locale, String userSub );
 
     /**
      * Check if a subscription can be automatically removed. If the subscription

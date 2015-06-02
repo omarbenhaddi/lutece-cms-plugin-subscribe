@@ -132,9 +132,9 @@ public class SubscribeApp extends MVCApplication
                             subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ) ) );
                     subscriptionDTO.setUrlModify( providerService.getUrlModifySubscription( user,
                             subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ) ) );
-                    subscriptionDTO.setHtmlSubscription( providerService.getSubscriptionHtmlDescription( user,
+                    subscriptionDTO.setHtmlSubscription( providerService.getSubscriptionHtmlDescriptionBis( user,
                             subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ),
-                            request.getLocale( ) ) );
+                            request.getLocale( ),subscription.getIdSubscribedResource() ) );
                     listSubscriptionDto.add( subscriptionDTO );
                 }
 
