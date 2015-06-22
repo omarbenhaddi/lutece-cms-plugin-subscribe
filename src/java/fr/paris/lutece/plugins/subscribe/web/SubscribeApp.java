@@ -119,7 +119,7 @@ public class SubscribeApp extends MVCApplication
             {
                 SubscriptionService subscriptionService = SubscriptionService.getInstance( );
                 SubscriptionFilter filter = new SubscriptionFilter( );
-                filter.setIdSubscriber( user.getUserInfo( LuteceUser.BUSINESS_INFO_ONLINE_EMAIL ) );
+                filter.setIdSubscriber( user.getName( ) );
                 List<Subscription> listSubscription = subscriptionService.findByFilter( filter );
                 List<SubscriptionDTO> listSubscriptionDto = new ArrayList<SubscriptionDTO>( listSubscription.size( ) );
                 for ( Subscription subscription : listSubscription )
@@ -191,7 +191,7 @@ public class SubscribeApp extends MVCApplication
             LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
             Subscription subscription = SubscriptionService.getInstance( ).findBySubscriptionId( nIdSubscription );
             if ( user != null && subscription != null
-                    && StringUtils.equals( subscription.getUserId( ), user.getUserInfo( LuteceUser.BUSINESS_INFO_ONLINE_EMAIL ) ) )
+                    && StringUtils.equals( subscription.getUserId( ), user.getName() ) )
             {
                 SubscriptionService.getInstance( ).removeSubscription( nIdSubscription, true );
             }
