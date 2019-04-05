@@ -80,7 +80,16 @@ public final class SubscriptionService
      */
     public void createSubscription( Subscription subscription, LuteceUser user )
     {
-        subscription.setUserId( user.getName( ) );
+       createSubscription( subscription, user.getName( ));
+    }
+    /**
+     * Create a new subscription for the given user Key
+     * @param subscription The subscription to create
+     * @param strLuteceUserName The user key to associate the subscription to
+     */
+    public void createSubscription( Subscription subscription, String strLuteceUserName)
+    {
+        subscription.setUserId( strLuteceUserName);
         createSubscription( subscription );
     }
 
