@@ -44,7 +44,9 @@ import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
@@ -55,13 +57,14 @@ import fr.paris.lutece.util.url.UrlItem;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * Subscribe application
@@ -75,6 +78,9 @@ public class SubscribeApp extends MVCApplication
 
     private static final String MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION = "module.subscribe.mydashboard.message.confirmRemoveSubscription";
     private static final String MESSAGE_ACCESS_DENIED = "module.subscribe.mydashboard.message.accessDenied";
+
+    private static final String ENCODE_FROM_URL_PARAMETER = "encode.fromUrl.parameter";
+    private static final String ENABLE_FROM_URL_PARAMETER = "enable.fromUrl.parameter";
 
     private static final String PARAMETER_REFERER = "referer";
     private static final String PARAMETER_ID_SUBSCRIPTION = "idSubscription";
@@ -152,10 +158,12 @@ public class SubscribeApp extends MVCApplication
 
     /**
      * Get the confirmation message before removing a subscription
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return a XPage
-     * @throws SiteMessageException A SiteMessageException to display the
-     *             confirmation message
+     * @throws SiteMessageException
+     *             A SiteMessageException to display the confirmation message
      */
     @Action( ACTION_CONFIRM_REMOVE_URL )
     public XPage confirmRemoveSubscription( HttpServletRequest request ) throws SiteMessageException
@@ -164,21 +172,36 @@ public class SubscribeApp extends MVCApplication
         UrlItem urlItem = new UrlItem( PATH_PORTAL + getActionUrl( ACTION_DO_REMOVE_URL ) );
         urlItem.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
         Map<String, Object> requestParameters = new HashMap<String, Object>( );
-        urlItem.addParameter( PARAMETER_FROM_URL, strReferer );
-        
-        SiteMessageService.setMessage( request, MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION, SiteMessage.TYPE_CONFIRMATION, urlItem.getUrl(),
-        		requestParameters );
-        
-      
+
+        if ( AppPropertiesService.getPropertyBoolean( ENCODE_FROM_URL_PARAMETER, true ) )
+        {
+            try
+            {
+                urlItem.addParameter( PARAMETER_FROM_URL, URLEncoder.encode( strReferer, "UTF-8" ) );
+            }
+            catch( UnsupportedEncodingException e )
+            {
+                AppLogService.error( e );
+            }
+        }
+        else
+        {
+            urlItem.addParameter( PARAMETER_FROM_URL, strReferer );
+        }
+
+        SiteMessageService.setMessage( request, MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION, SiteMessage.TYPE_CONFIRMATION, urlItem.getUrl( ), requestParameters );
+
         return null;
     }
 
     /**
      * Do remove a subscription
-     * @param request The request
+     *
+     * @param request
+     *            The request
      * @return a XPage
-     * @throws SiteMessageException If the user is not allow to modify the
-     *             subscription
+     * @throws SiteMessageException
+     *             If the user is not allow to modify the subscription
      */
     @Action( ACTION_DO_REMOVE_URL )
     public XPage doRemoveSubscription( HttpServletRequest request ) throws SiteMessageException
@@ -190,8 +213,7 @@ public class SubscribeApp extends MVCApplication
             int nIdSubscription = Integer.parseInt( strIdSubscription );
             LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
             Subscription subscription = SubscriptionService.getInstance( ).findBySubscriptionId( nIdSubscription );
-            if ( user != null && subscription != null
-                    && StringUtils.equals( subscription.getUserId( ), user.getName() ) )
+            if ( user != null && subscription != null && StringUtils.equals( subscription.getUserId( ), user.getName( ) ) )
             {
                 SubscriptionService.getInstance( ).removeSubscription( nIdSubscription, true );
             }
@@ -201,11 +223,11 @@ public class SubscribeApp extends MVCApplication
             }
         }
 
-        String strReferer = request.getParameter( PARAMETER_FROM_URL );
+        String strFromParam = request.getParameter( PARAMETER_FROM_URL );
         String strUrl;
-        if ( StringUtils.isNotEmpty( strReferer ) )
+        if ( StringUtils.isNotEmpty( strFromParam ) && AppPropertiesService.getPropertyBoolean( ENABLE_FROM_URL_PARAMETER, true ) )
         {
-            strUrl = strReferer;
+            strUrl = strFromParam;
         }
         else
         {
