@@ -45,7 +45,6 @@ import fr.paris.lutece.test.LuteceTestCase;
 public class SubscriptionBusinessTest extends LuteceTestCase
 {
     private final static int IDABONNEMENT1 = 1;
-    private final static int IDABONNEMENT2 = 2;
     private final static String SUBSCRIPTIONPROVIDER1 = "SubscriptionProvider1";
     private final static String SUBSCRIPTIONPROVIDER2 = "SubscriptionProvider2";
     private final static String ACTIONKEY1 = "ActionKey1";
@@ -62,6 +61,7 @@ public class SubscriptionBusinessTest extends LuteceTestCase
         Plugin plugin = PluginService.getPlugin( "subscribe" );
         // Initialize an object
         Subscription subscription = new Subscription( );
+        subscription.setUserId( "0" );
         subscription.setIdSubscription( IDABONNEMENT1 );
         subscription.setSubscriptionProvider( SUBSCRIPTIONPROVIDER1 );
         subscription.setSubscriptionKey( ACTIONKEY1 );
@@ -70,18 +70,19 @@ public class SubscriptionBusinessTest extends LuteceTestCase
         // Create test
         dao.insert( subscription, plugin );
         Subscription subscriptionStored = dao.load( subscription.getIdSubscription( ), plugin );
+        assertNotNull( subscriptionStored );
         assertEquals( subscriptionStored.getIdSubscription( ), subscription.getIdSubscription( ) );
         assertEquals( subscriptionStored.getSubscriptionProvider( ), subscription.getSubscriptionProvider( ) );
         assertEquals( subscriptionStored.getSubscriptionKey( ), subscription.getSubscriptionKey( ) );
         assertEquals( subscriptionStored.getIdSubscribedResource( ), subscription.getIdSubscribedResource( ) );
 
         // Update test
-        subscription.setIdSubscription( IDABONNEMENT2 );
         subscription.setSubscriptionProvider( SUBSCRIPTIONPROVIDER2 );
         subscription.setSubscriptionKey( ACTIONKEY2 );
         subscription.setIdSubscribedResource( IDSUBSCRIBEDRESOURCE2 );
         dao.store( subscription, plugin );
         subscriptionStored = dao.load( subscription.getIdSubscription( ), plugin );
+        assertNotNull( subscriptionStored );
         assertEquals( subscriptionStored.getIdSubscription( ), subscription.getIdSubscription( ) );
         assertEquals( subscriptionStored.getSubscriptionProvider( ), subscription.getSubscriptionProvider( ) );
         assertEquals( subscriptionStored.getSubscriptionKey( ), subscription.getSubscriptionKey( ) );
