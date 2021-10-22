@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plug-in>
+<?xml version="1.0" encoding="UTF-8"?><plug-in>
 	<name>subscribe</name>
 	<class>fr.paris.lutece.plugins.subscribe.service.SubscribePlugin
 	</class>
-	<version>1.0.4-SNAPSHOT</version>
-	<documentation />
-	<installation />
-	<changes />
-	<user-guide />
+	<version>1.0.4</version>
+	<documentation/>
+	<installation/>
+	<changes/>
+	<user-guide/>
 	<description>subscribe.plugin.description</description>
 	<provider>subscribe.plugin.provider</provider>
 	<provider-url>http://dev.lutece.paris.fr</provider-url>
