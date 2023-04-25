@@ -62,6 +62,7 @@ public class Subscription
     private String _strSubscriptionKey;
     @Size( max = 255, message = "#i18n{portal.validation.message.sizeMax}" )
     private String _strIdSubscribedResource;
+    private int _nOrder;
 
     /**
      * Returns the technical id of the subscription
@@ -171,4 +172,21 @@ public class Subscription
     {
         _strIdSubscribedResource = strIdSubscribedResource;
     }
+
+    /**
+     * @return the _nOrder
+     */
+    public int getOrder( )
+    {
+        return _nOrder;
+    }
+
+    /**
+     * @param nOrder the _nOrder to set
+     */
+    public void setOrder( int nOrder )
+    {
+        this._nOrder = nOrder;
+    }
+
 }
