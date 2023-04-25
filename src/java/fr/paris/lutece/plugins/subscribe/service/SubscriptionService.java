@@ -241,4 +241,13 @@ public final class SubscriptionService
         }
         return null;
     }
+    
+    /**
+     * setSubscription
+     * @param subscription
+     */
+    public void setSubscription( Subscription subscription )
+    {
+        _dao.store( subscription, SubscribePlugin.getPlugin( ) );
+    }
 }

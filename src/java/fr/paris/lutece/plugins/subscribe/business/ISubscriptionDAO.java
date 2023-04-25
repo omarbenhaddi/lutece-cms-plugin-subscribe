@@ -105,5 +105,12 @@ public interface ISubscriptionDAO
      * @return The list of subscriptions that matches the given filter
      */
     List<Subscription> findByFilter( SubscriptionFilter filter );
+    
+    /**
+     * Get max order
+     * @param plugin
+     * @return max order
+     */
+    int getMaxOrder( Plugin plugin );
 
 }
